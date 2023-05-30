@@ -20,12 +20,37 @@
           </a>
           <ul class="nav nav-treeview">
             <li class="nav-item">
+              <a href="{{route('cms.home.index')}}" class="nav-link {{ request()->routeIs('cms.home.index') ? 'active' : '' }}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Home</p>
+              </a>
+            </li>
+            @if(auth()->user()->role == 'user')
+            <li class="nav-item">
               <a href="{{route('cms.user.index')}}" class="nav-link {{ request()->routeIs('cms.user.index') ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>User</p>
               </a>
             </li>
-          </ul>
+            @endif
+            @if(auth()->user()->role == 'admin')
+        <li class="nav-item">
+          <a href="{{route('cms.admin.index')}}" class="nav-link {{ request()->routeIs('cms.admin.index') ? 'active' : '' }}">
+            <i class="far fa-circle nav-icon"></i>
+            <p>Admin</p>
+          </a>
+        </li>
+        @endif
+        <li class="nav-item has-treeview">
+          <a href="#" class="nav-link">
+            <div class="d-flex">
+                <form action="{{route('logout')}}" method="post">
+                @csrf
+                <i class="nav-icon fas fa-sign-out-alt"></i>
+                <button type="submit" style="background: none; border:none; color:white">Logout</button>
+              </form>
+            </div>
+          </a>
         </li>
       </ul>
     </nav>

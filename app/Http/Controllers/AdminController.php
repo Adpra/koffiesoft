@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 
-class UserController extends Controller
+class AdminController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,12 +14,10 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-
         $users = User::query()
             ->where('role', '!=', 'admin')
             ->orderBy('id', 'DESC')
             ->paginate();
-
 
         if ($request->search) {
             $users = User::where('name', 'LIKE', '%' . $request->search . '%')
@@ -27,8 +25,7 @@ class UserController extends Controller
                 ->paginate();
         }
 
-        $title = 'user';
-
+        $title = 'admin';
 
         return view('user.index', compact('users', 'title'));
     }
@@ -94,8 +91,10 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(User $admin)
     {
-        //
+        $admin->forceDelete();
+
+        return redirect('cms/admin')->with('message', 'deleted success!');
     }
 }

@@ -2,35 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use Illuminate\Http\Request;
 
-class UserController extends Controller
+class HomeController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-
-        $users = User::query()
-            ->where('role', '!=', 'admin')
-            ->orderBy('id', 'DESC')
-            ->paginate();
-
-
-        if ($request->search) {
-            $users = User::where('name', 'LIKE', '%' . $request->search . '%')
-                ->orWhere('email', 'LIKE', '%' . $request->search . '%')
-                ->paginate();
-        }
-
-        $title = 'user';
-
-
-        return view('user.index', compact('users', 'title'));
+        return view('home');
     }
 
     /**

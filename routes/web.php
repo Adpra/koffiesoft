@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -15,11 +19,23 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
+
+
+Route::get('/login', [AuthController::class, 'showLogin'])->name('showlogin');
+Route::post('/login', [AuthController::class, 'authenticate'])->name('login');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::resource('register', RegisterController::class);
+
+
+
 Route::prefix('cms')
+    ->middleware('auth')
     ->name('cms.')
     ->group(function () {
-        Route::resource('user', UserController::class);
+        Route::resource('/home', HomeController::class);
+        Route::resource('user', UserController::class)->middleware('access.user');
+        Route::resource('admin', AdminController::class)->middleware('access.admin');
     });

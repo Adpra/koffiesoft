@@ -2,35 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
-class UserController extends Controller
+class RegisterController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-
-        $users = User::query()
-            ->where('role', '!=', 'admin')
-            ->orderBy('id', 'DESC')
-            ->paginate();
-
-
-        if ($request->search) {
-            $users = User::where('name', 'LIKE', '%' . $request->search . '%')
-                ->orWhere('email', 'LIKE', '%' . $request->search . '%')
-                ->paginate();
-        }
-
-        $title = 'user';
-
-
-        return view('user.index', compact('users', 'title'));
+        return view('auth.register');
     }
 
     /**
@@ -49,9 +35,17 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(RegisterRequest $request)
     {
-        //
+
+        User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'role' => 'user'
+        ]);
+
+        return redirect('/register')->with('message', 'Registration successful!');
     }
 
     /**
