@@ -14,7 +14,7 @@
 <div>
   <div class="d-flex justify-content-between">
     <div class="mb-5">
-      <form action="" method="get">
+      <form action="{{route($route)}}" method="get">
         @csrf
         <div class="d-flex">
           <div class="mr-3">

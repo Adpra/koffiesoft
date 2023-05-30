@@ -14,20 +14,26 @@ class AdminController extends Controller
      */
     public function index(Request $request)
     {
+        $route = 'cms.admin.index';
+        $title = 'admin';
+
         $users = User::query()
             ->where('role', '!=', 'admin')
             ->orderBy('id', 'DESC')
             ->paginate();
 
         if ($request->search) {
-            $users = User::where('name', 'LIKE', '%' . $request->search . '%')
-                ->orWhere('email', 'LIKE', '%' . $request->search . '%')
+            $users = User::where(function ($query) use ($request) {
+                $query->where('name', 'LIKE', '%' . $request->search . '%')
+                    ->orWhere('email', 'LIKE', '%' . $request->search . '%');
+            })
+                ->where('role', '!=', 'admin')
                 ->paginate();
         }
 
-        $title = 'admin';
+        $users->appends($request->query());
 
-        return view('user.index', compact('users', 'title'));
+        return view('user.index', compact('users', 'title', 'route'));
     }
 
     /**

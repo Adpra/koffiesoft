@@ -15,6 +15,9 @@ class UserController extends Controller
     public function index(Request $request)
     {
 
+        $title = 'user';
+        $route = 'cms.user.index';
+
         $users = User::query()
             ->where('role', '!=', 'admin')
             ->orderBy('id', 'DESC')
@@ -22,15 +25,17 @@ class UserController extends Controller
 
 
         if ($request->search) {
-            $users = User::where('name', 'LIKE', '%' . $request->search . '%')
-                ->orWhere('email', 'LIKE', '%' . $request->search . '%')
+            $users = User::where(function ($query) use ($request) {
+                $query->where('name', 'LIKE', '%' . $request->search . '%')
+                    ->orWhere('email', 'LIKE', '%' . $request->search . '%');
+            })
+                ->where('role', '!=', 'admin')
                 ->paginate();
         }
 
-        $title = 'user';
+        $users->appends($request->query());
 
-
-        return view('user.index', compact('users', 'title'));
+        return view('user.index', compact('users', 'title', 'route'));
     }
 
     /**

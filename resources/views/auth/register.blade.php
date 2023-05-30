@@ -57,6 +57,19 @@
                     {{ $errors->first('password') }}
                     </div>
                     @endif
+                  </div>
+                </div>
+
+                <!-- Password Confirmation input -->
+                <div class="{{ $errors->has('password_confirmation') ? 'has-error' : '' }}">
+                  <div class="form-outline mb-4">
+                    <input type="password" id="form2Example2" class="form-control" name="password_confirmation"/>
+                    <label class="form-label" for="form2Example2">Password Confirmation</label>
+                    @if ($errors->has('password_confirmation'))
+                    <div class="help-block" style="color:rgb(208, 46, 46);">
+                    {{ $errors->first('password_confirmation') }}
+                    </div>
+                    @endif
                     <div class="text-end"><a href="/">Login</a></div>
                   </div>
                 </div>
